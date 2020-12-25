@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "purify-ts": "^0.16.1",
-    "vue": "^3.0.4"
+    "vue": "^3.0.4",
+    "vue-dfs-store": "0.0.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss7-compat": "^2.0.2",
