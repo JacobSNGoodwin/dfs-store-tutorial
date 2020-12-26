@@ -35,7 +35,7 @@ export const createRestaurant = async (
 export const updateRestaurant = async (
   restaurant: Restaurant
 ): Promise<ResponseOrError<Restaurant>> => {
-  console.log("Restaurant to put: ", restaurant);
+  // console.log("Restaurant to put: ", restaurant);
   return await doRequest<Restaurant>(`${apiURL}/${restaurant.id}`, {
     method: "PUT",
     headers: {

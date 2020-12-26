@@ -31,6 +31,8 @@ import { Restaurant } from "../data/index";
 import RestaurantCard from "./RestaurantCard.vue";
 import EditRestaurant from "./EditRestaurant.vue";
 import { Modal } from "../components/ui";
+import { useStore } from "vue-dfs-store";
+import restaurantStore from "../store/restaurant";
 
 export default defineComponent({
   name: "RestaurantList",
@@ -46,6 +48,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const { accessors } = useStore(restaurantStore);
     const selectedRestaurantId = ref<number>(0);
     const showModal = ref<boolean>(false);
 
@@ -58,7 +61,7 @@ export default defineComponent({
     };
 
     const updateRestaurant = (restaurant: Restaurant) => {
-      console.log("Updating restaurant: ", restaurant);
+      accessors.update(restaurant);
       setShowModal(false);
     };
 

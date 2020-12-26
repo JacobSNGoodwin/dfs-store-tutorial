@@ -13,6 +13,7 @@ type RestaurantAccessors = {
   create: (restaurant: api.Restaurant) => Promise<void>;
   get: () => Promise<void>;
   sorted: () => api.Restaurant[];
+  update: (restaurant: api.Restaurant) => Promise<void>;
 };
 
 const accessorsCreator = (
@@ -68,6 +69,32 @@ const accessorsCreator = (
   sorted: () => {
     // can't sort/mutate readonly reactive object directly
     return [...get().restaurants].sort((a, b) => (a.name > b.name ? 1 : -1));
+  },
+  update: async (restaurant: api.Restaurant) => {
+    mutate((state) => {
+      state.updating = true;
+      state.error = undefined;
+    });
+
+    const resp = await api.updateRestaurant(restaurant);
+
+    resp.either(
+      (err) => {
+        mutate((state) => {
+          state.error = err;
+        });
+      },
+      (updatedRestaurant) => {
+        mutate((state) => {
+          const indexToUpdate = state.restaurants.findIndex(
+            (r) => r.id === updatedRestaurant.id
+          );
+          state.restaurants[indexToUpdate] = updatedRestaurant;
+        });
+      }
+    );
+
+    mutate((state) => (state.updating = false));
   },
 });
 
