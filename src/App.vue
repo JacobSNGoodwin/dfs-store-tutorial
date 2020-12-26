@@ -5,7 +5,10 @@
     </div>
     <Loader
       :style="{
-        visibility: state.loading || state.updating ? 'visible' : 'hidden',
+        visibility:
+          state.loading || state.updating || state.deleting
+            ? 'visible'
+            : 'hidden',
       }"
       class="mt-6"
       color="#A78BFA"

@@ -57,7 +57,7 @@ export default defineComponent({
     };
 
     const deleteRestaurant = (id: number) => {
-      console.log("deleting restaurant with id: ", id);
+      accessors.delete(id);
     };
 
     const updateRestaurant = (restaurant: Restaurant) => {

@@ -15,7 +15,7 @@
     {
       "id": 3,
       "name": "Nick's Pizza",
-      "rating": 3.5,
+      "rating": 4,
       "review": "Very bready pizza, which means it's filling, but you're going to need a beverage to swallow it down!"
     },
     {
@@ -23,12 +23,6 @@
       "rating": 1,
       "review": "Home of the good burger, can I take your order?",
       "id": 4
-    },
-    {
-      "id": 5,
-      "name": "Denny's on HWY 1",
-      "rating": 3,
-      "review": "It is what it is, indeed 'tis. But you can get pancakes at midnight.\n\nUpdate: new pancake chef!"
     }
   ]
 }

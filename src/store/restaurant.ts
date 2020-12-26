@@ -11,6 +11,7 @@ type RestaurantState = {
 
 type RestaurantAccessors = {
   create: (restaurant: api.Restaurant) => Promise<void>;
+  delete: (id: number) => Promise<void>;
   get: () => Promise<void>;
   sorted: () => api.Restaurant[];
   update: (restaurant: api.Restaurant) => Promise<void>;
@@ -42,6 +43,31 @@ const accessorsCreator = (
     );
 
     mutate((state) => (state.updating = false));
+  },
+  delete: async (idToDelete: number) => {
+    mutate((state) => {
+      state.deleting = true;
+      state.error = undefined;
+    });
+
+    const resp = await api.deleteRestaurant(idToDelete);
+
+    resp.either(
+      (err) => {
+        mutate((state) => {
+          state.error = err;
+        });
+      },
+      () => {
+        mutate((state) => {
+          state.restaurants = state.restaurants.filter(
+            ({ id }) => id !== idToDelete
+          );
+        });
+      }
+    );
+
+    mutate((state) => (state.deleting = false));
   },
   get: async () => {
     mutate((state) => {
