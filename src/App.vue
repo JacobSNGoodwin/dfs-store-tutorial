@@ -5,7 +5,7 @@
     </div>
     <Loader
       :style="{
-        visibility: state.loading ? 'visible' : 'hidden',
+        visibility: state.loading || state.updating ? 'visible' : 'hidden',
       }"
       class="mt-6"
       color="#A78BFA"
@@ -66,7 +66,7 @@ export default defineComponent({
     };
 
     const createRestaurant = async (newRestaurant: Restaurant) => {
-      console.log("creating a new restaurant: ", newRestaurant);
+      await accessors.create(newRestaurant);
       showModal.value = false;
     };
 

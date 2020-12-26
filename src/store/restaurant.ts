@@ -10,6 +10,7 @@ type RestaurantState = {
 };
 
 type RestaurantAccessors = {
+  create: (restaurant: api.Restaurant) => Promise<void>;
   get: () => Promise<void>;
   sorted: () => api.Restaurant[];
 };
@@ -18,6 +19,29 @@ const accessorsCreator = (
   mutate: Mutator<RestaurantState>,
   get: GetState<RestaurantState>
 ): RestaurantAccessors => ({
+  create: async (restaurant: api.Restaurant) => {
+    mutate((state) => {
+      state.updating = true;
+      state.error = undefined;
+    });
+
+    const resp = await api.createRestaurant(restaurant);
+
+    resp.either(
+      (err) => {
+        mutate((state) => {
+          state.error = err;
+        });
+      },
+      (createdRestaurant) => {
+        mutate((state) => {
+          state.restaurants.push(createdRestaurant);
+        });
+      }
+    );
+
+    mutate((state) => (state.updating = false));
+  },
   get: async () => {
     mutate((state) => {
       state.loading = true;

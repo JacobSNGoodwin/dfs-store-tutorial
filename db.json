@@ -23,6 +23,12 @@
       "rating": 1,
       "review": "Home of the good burger, can I take your order?",
       "id": 4
+    },
+    {
+      "name": "Denny's on HWY 1",
+      "rating": 2,
+      "review": "It is what it is, indeed 'tis. But you can get pancakes at midnight.",
+      "id": 5
     }
   ]
 }
