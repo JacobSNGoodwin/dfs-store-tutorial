@@ -5,7 +5,7 @@
     </div>
     <Loader
       :style="{
-        visibility: loading ? 'visible' : 'hidden',
+        visibility: state.loading ? 'visible' : 'hidden',
       }"
       class="mt-6"
       color="#A78BFA"
@@ -36,11 +36,13 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed } from "vue";
+import restaurantStore from "./store/restaurant";
+import { useStore } from "vue-dfs-store";
 import { Loader, Modal } from "./components/ui";
 import RestaurantList from "./components/RestaurantList.vue";
 import EditRestaurant from "./components/EditRestaurant.vue";
 import { SecondaryButton } from "./components/ui";
-import { Restaurant, getRestaurants } from "./data";
+import { Restaurant } from "./data";
 
 export default defineComponent({
   name: "App",
@@ -53,25 +55,10 @@ export default defineComponent({
   },
   setup() {
     const showModal = ref(false);
-    const restaurants = ref<Restaurant[]>([]);
-    const loading = ref(false);
-    const error = ref<Error | undefined>(undefined);
+    const { state, accessors } = useStore(restaurantStore);
 
     onMounted(async () => {
-      error.value = undefined;
-      loading.value = true;
-      const restaurantsOrError = await getRestaurants();
-
-      restaurantsOrError.either(
-        (fetchedError) => {
-          error.value = fetchedError;
-        },
-        (fetchedRestaurants) => {
-          restaurants.value = fetchedRestaurants;
-        }
-      );
-
-      loading.value = false;
+      accessors.get();
     });
 
     const setShowModal = (show: boolean) => {
@@ -84,14 +71,14 @@ export default defineComponent({
     };
 
     const sortedRestaurants = computed(() =>
-      restaurants.value.sort((a, b) => (a.name < b.name ? -1 : 1))
+      [...state.restaurants].sort((a, b) => (a.name < b.name ? -1 : 1))
     );
 
     return {
       createRestaurant,
       setShowModal,
       showModal,
-      loading,
+      state,
       sortedRestaurants,
     };
   },

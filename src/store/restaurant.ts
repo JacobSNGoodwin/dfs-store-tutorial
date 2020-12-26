@@ -1,4 +1,4 @@
-import { AccessorFunc, createStore } from "vue-dfs-store";
+import { createStore, Mutator, GetState } from "vue-dfs-store";
 import * as api from "../data";
 
 type RestaurantState = {
@@ -9,7 +9,38 @@ type RestaurantState = {
   deleting: boolean;
 };
 
-type RestaurantAccessors = Record<string, AccessorFunc>;
+type RestaurantAccessors = {
+  get: () => Promise<void>;
+};
+
+const accessorsCreator = (
+  mutate: Mutator<RestaurantState>,
+  get: GetState<RestaurantState>
+): RestaurantAccessors => ({
+  get: async () => {
+    mutate((state) => {
+      state.loading = true;
+      state.error = undefined;
+    });
+
+    const resp = await api.getRestaurants();
+
+    resp.either(
+      (err) => {
+        mutate((state) => {
+          state.error = err;
+        });
+      },
+      (fetchedRestaurants) => {
+        mutate((state) => {
+          state.restaurants = fetchedRestaurants;
+        });
+      }
+    );
+
+    mutate((state) => (state.loading = false));
+  },
+});
 
 const restaurantStore = createStore<RestaurantState, RestaurantAccessors>({
   name: "RestaurantStore",
@@ -20,7 +51,7 @@ const restaurantStore = createStore<RestaurantState, RestaurantAccessors>({
     updating: false,
     deleting: false,
   },
-  accessorsCreator: () => ({}),
+  accessorsCreator,
 });
 
 export default restaurantStore;
