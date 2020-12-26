@@ -11,6 +11,7 @@ type RestaurantState = {
 
 type RestaurantAccessors = {
   get: () => Promise<void>;
+  sorted: () => api.Restaurant[];
 };
 
 const accessorsCreator = (
@@ -39,6 +40,10 @@ const accessorsCreator = (
     );
 
     mutate((state) => (state.loading = false));
+  },
+  sorted: () => {
+    // can't sort/mutate readonly reactive object directly
+    return [...get().restaurants].sort((a, b) => (a.name > b.name ? 1 : -1));
   },
 });
 

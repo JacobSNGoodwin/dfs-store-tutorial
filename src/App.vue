@@ -70,9 +70,7 @@ export default defineComponent({
       showModal.value = false;
     };
 
-    const sortedRestaurants = computed(() =>
-      [...state.restaurants].sort((a, b) => (a.name < b.name ? -1 : 1))
-    );
+    const sortedRestaurants = computed(() => accessors.sorted());
 
     return {
       createRestaurant,
